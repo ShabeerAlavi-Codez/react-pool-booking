@@ -1,25 +1,25 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
 import isBetweenPlugin from "dayjs/plugin/isBetween";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import {styled} from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {StaticDatePicker} from "@mui/x-date-pickers/StaticDatePicker";
-import {PickersDay} from "@mui/x-date-pickers/PickersDay";
-import {useDispatch} from "react-redux";
-import {setCurrentWeek} from "../store/DataSlice";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
+import { PickersDay } from "@mui/x-date-pickers/PickersDay";
+import { useDispatch } from "react-redux";
+import { setCurrentWeek } from "../store/DataSlice";
 
-// Подключение плагинов для календаря
-dayjs.extend(isBetweenPlugin); // Позволяет выбрать промежуток
-dayjs.extend(weekOfYear); // Получить по дню номер недели в году
+// Importing plugins for the calendar
+dayjs.extend(isBetweenPlugin); // Allows selecting a range
+dayjs.extend(weekOfYear); // Gets the week number of the year
 
-// Стили одного дня для календаря
+// Styles for a single day in the calendar
 const CustomPickersDay = styled(PickersDay, {
     shouldForwardProp: (prop) =>
         prop !== "dayIsBetween" && prop !== "isFirstDay" && prop !== "isLastDay",
-})(({theme, dayIsBetween, isFirstDay, isLastDay}) => ({
+})(({ theme, dayIsBetween, isFirstDay, isLastDay }) => ({
     ...(dayIsBetween && {
         borderRadius: 0,
         backgroundColor: theme.palette.primary.main,
@@ -42,19 +42,19 @@ export default function CustomDay() {
     const dispatch = useDispatch();
     const [value, setValue] = useState(dayjs());
 
-    // Функция рендера одного дня
+    // Function to render a single day
     const renderWeekPickerDay = (date, selectedDates, pickersDayProps) => {
         if (!value) {
-            return <PickersDay {...pickersDayProps}/>;
+            return <PickersDay {...pickersDayProps} />;
         }
 
         const start = value.startOf("week");
         const end = value.endOf("week");
 
-        // Переменные для стилей
-        const dayIsBetween = date.isBetween(start, end, null, "[]"); // День внутри промежутка
-        const isFirstDay = date.isSame(start, "day"); // День первый в промежутке
-        const isLastDay = date.isSame(end, "day"); // День последний в промежутке
+        // Variables for styles
+        const dayIsBetween = date.isBetween(start, end, null, "[]"); // Day within the range
+        const isFirstDay = date.isSame(start, "day"); // First day in the range
+        const isLastDay = date.isSame(end, "day"); // Last day in the range
 
         return (
             <CustomPickersDay
@@ -74,8 +74,8 @@ export default function CustomDay() {
                 label="Week picker"
                 value={value}
                 onChange={(newValue) => {
-                    setValue(newValue); // Сохраняем в локальный state номер недели
-                    dispatch(setCurrentWeek(newValue.week())); // Сохраняем в глобальный state номер недели
+                    setValue(newValue); // Save the week number to local state
+                    dispatch(setCurrentWeek(newValue.week())); // Save the week number to global state
                 }}
                 renderDay={renderWeekPickerDay}
                 renderInput={(params) => <TextField {...params} />}

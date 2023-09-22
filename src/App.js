@@ -30,13 +30,12 @@ function App() {
           <Col md={6}>
 
             <h5 className="mainInfo">
-              6 дорожек длиной в 25 метров ждут всех желающих. Помимо студентов
-              в ранние утренние и вечерние часы, а также в выходные дни по
-              абонементной системе здесь могут заниматься все желающие. В числе
-              преимуществ и особенностей бассейна: двойная отчистка озонирование
-              и хлорирование, автоматизированная система наблюдения, которая
-              выводит все необходимые данные, такие как температура воды и
-              воздуха. За сутки вода в бассейне обновляется 2,5 раза.
+            6 tracks 25 meters long are waiting for everyone. In addition to students,
+             anyone can study here in the early morning and evening hours, as well as on 
+             weekends using a subscription system. Among the advantages and features of the pool:
+              double cleaning, ozonation and chlorination, 
+              an automated monitoring system that displays all the necessary data,
+               such as water and air temperature. During the day, the water in the pool is updated 2.5 times.
             </h5>
           </Col>
           <Col className="text-center" md={5}>

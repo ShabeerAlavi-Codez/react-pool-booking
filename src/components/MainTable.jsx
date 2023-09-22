@@ -1,13 +1,13 @@
 import Table from "react-bootstrap/Table";
-import {useEffect} from "react";
-import {getData} from "../store/DataSlice";
-import {useDispatch, useSelector} from "react-redux";
+import { useEffect } from "react";
+import { getData } from "../store/DataSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-// Основная страница
-export default function MainTable({setID}) {
-    // Получаем и глобального state
-    const data = useSelector((state) => state.data.data); // Количество дорожек для каждого дня
-    const week = useSelector((state) => state.data.currentWeek); // Номер текущей недели
+// Main page
+export default function MainTable({ setID }) {
+    // Get data from global state
+    const data = useSelector((state) => state.data.data); // Number of lanes for each day
+    const week = useSelector((state) => state.data.currentWeek); // Current week number
 
     const dispatch = useDispatch();
 
@@ -35,43 +35,43 @@ export default function MainTable({setID}) {
         "21:30",
     ];
 
-    // Получаем свободные дорожки в зависимости от недели
+    // Get available lanes depending on the week
     useEffect(() => {
         dispatch(getData(week));
     }, [week]);
 
-    // Ждём, пока данные загрузятся с сервера
+    // Wait for data to load from the server
     if (!data)
-        return;
+        return null;
 
     return (
         <Table striped bordered hover responsive size="md">
             <thead>
             <tr>
                 <th></th>
-                <th>Пн.</th>
-                <th>Вт.</th>
-                <th>Ср.</th>
-                <th>Чт.</th>
-                <th>Пт.</th>
-                <th>Сб.</th>
-                <th>Вс.</th>
+                <th>Mon.</th>
+                <th>Tue.</th>
+                <th>Wed.</th>
+                <th>Thu.</th>
+                <th>Fri.</th>
+                <th>Sat.</th>
+                <th>Sun.</th>
             </tr>
             </thead>
             <tbody>
-            {time.map((time, i) => ( // Проходимся по каждому времени из массива
+            {time.map((time, i) => ( // Iterate through each time slot from the array
                 <tr key={i}>
                     <td>{time}</td>
-                    {data[time]?.map((e, i) => ( // Для каждого времени проходимся по дням недели и отрисовываем свободное количество дорожек
+                    {data[time]?.map((e, i) => ( // For each time slot, iterate through the days of the week and render the available number of lanes
                         <td
                             className="dataCell"
                             key={i}
-                            style={{cursor: "pointer"}}
-                            // При нажатии на ячейку сохраняем время, день недели и количество свободных мест
-                            // в переменную в компоненте App, чтобы понять на какой день и время мы бронируем дорожки
-                            onClick={() => setID({time: time, day: i, seats: e})}
+                            style={{ cursor: "pointer" }}
+                            // When clicking on a cell, store the time, day of the week, and the number of available seats
+                            // in a variable in the App component to determine which day and time we are booking lanes for
+                            onClick={() => setID({ time: time, day: i, seats: e })}
                         >
-                            {e + " дор."}
+                            {e + " available"}
                         </td>
                     ))}
                 </tr>
@@ -80,4 +80,3 @@ export default function MainTable({setID}) {
         </Table>
     );
 }
-

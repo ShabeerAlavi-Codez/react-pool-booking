@@ -1,21 +1,21 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Toast from "react-bootstrap/Toast";
 import Form from "react-bootstrap/Form";
 import ToastContainer from "react-bootstrap/ToastContainer";
-import {useForm} from "react-hook-form";
-import {toast} from 'react-toastify';
+import { useForm } from "react-hook-form";
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {useDispatch} from "react-redux";
-import {book} from "../store/DataSlice";
+import { useDispatch } from "react-redux";
+import { book } from "../store/DataSlice";
 import Button from "react-bootstrap/Button";
 
-// Второе модальное окно для бронирования дорожки (Данные для оплаты)
+// Second modal window for lane reservation (Payment details)
 function Card(props) {
     const dispatch = useDispatch();
-    const [isLoading, setLoading] = useState(false); // Идёт ли запрос на сервер?
+    const [isLoading, setLoading] = useState(false); // Is a server request in progress?
 
-    // Переменные управления формой с начальным значением полей
-    const {register, handleSubmit, formState: {errors}} = useForm({
+    // Form control variables with initial field values
+    const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             card_number: '',
             card_name: '',
@@ -28,7 +28,7 @@ function Card(props) {
     const handleClick = () => setLoading(true);
 
     const onSubmit = (payload) => {
-        // Если уже идёт запрос - не выполняем действие ещё раз
+        // If a request is already in progress, do not perform the action again
         if (isLoading)
             return;
 
@@ -41,13 +41,13 @@ function Card(props) {
             cardCVC: Number(payload.card_cvc)
         };
 
-        // Показываем уведомление о начале запроса
-        const bookToast = toast.loading("Отправляю запрос на сервер...")
+        // Show a notification about the server request
+        const bookToast = toast.loading("Sending a request to the server...")
 
-        // Выполняем запрос на сервер, отправляя данные о бронировании
+        // Send reservation data to the server
         dispatch(book(data)).then(response => {
             console.log(response);
-            // Если сервер вернул ошибку, показываем уведомление
+            // If the server returns an error, show a notification
             if (response.payload.status !== 200)
                 toast.update(bookToast, {
                     render: response.payload.error,
@@ -56,7 +56,7 @@ function Card(props) {
                     autoClose: 5000
                 });
             else {
-                // Если успешно, показываем уведомление и закрываем модальные окна
+                // If successful, show a notification and close the modal windows
                 props.close();
                 props.hideModal();
                 toast.update(bookToast, {
@@ -74,14 +74,14 @@ function Card(props) {
         <ToastContainer className="p-3" position={"top-center"}>
             <Toast onClose={props.close} animation={true} show={props.show}>
                 <Toast.Header closeButton={true}>
-                    <img src="holder.js/20x20?text=%20" className="rounded me-2" alt=""/>
-                    <strong className="me-auto">УрФУ</strong>
-                    {/*<small>Только что</small>*/}
+                    <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
+                    <strong className="me-auto">UrFU</strong>
+                    {/*<small>Just now</small>*/}
                 </Toast.Header>
                 <Toast.Body>
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Номер карты</Form.Label>
+                            <Form.Label>Card Number</Form.Label>
                             <Form.Control
                                 {...register(
                                     'card_number',
@@ -89,7 +89,7 @@ function Card(props) {
                                         required: true,
                                         pattern: {
                                             value: /^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$/,
-                                            message: "Введите номер карты"
+                                            message: "Enter card number"
                                         }
                                     })}
                                 type="text"
@@ -98,23 +98,23 @@ function Card(props) {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Имя владельца</Form.Label>
+                            <Form.Label>Cardholder Name</Form.Label>
                             <Form.Control
                                 {...register('card_name', {
-                                    required: "Введите имя владельца карты"
+                                    required: "Enter cardholder's name"
                                 })}
                                 type="text"
-                                placeholder="Имя"
+                                placeholder="Name"
                                 className={errors?.card_name && "is-invalid"}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Срок действия</Form.Label>
+                            <Form.Label>Expiration Date</Form.Label>
                             <Form.Control
                                 {...register('card_date', {
                                     required: true,
                                     pattern: {
-                                        value: /^[0-9]{2}\/[0-9]{2}$/i, message: "Введите срок действия карты"
+                                        value: /^[0-9]{2}\/[0-9]{2}$/i, message: "Enter card expiration date"
                                     }
                                 })}
                                 type="text"
@@ -129,7 +129,7 @@ function Card(props) {
                                     required: true,
                                     pattern: {
                                         value: /^[0-9]{3}$/,
-                                        message: "Введите CVC код"
+                                        message: "Enter CVC code"
                                     }
                                 })}
                                 type="text"
@@ -138,11 +138,11 @@ function Card(props) {
                             />
                         </Form.Group>
                         <Button variant="primary"
-                                disabled={isLoading}
-                                type="submit"
+                            disabled={isLoading}
+                            type="submit"
                             //onClick={!isLoading ? handleClick : null}
                         >
-                            {isLoading ? 'Загрузка…' : 'Оплатить'}
+                            {isLoading ? 'Loading…' : 'Pay'}
                         </Button>
                     </Form>
                 </Toast.Body>
